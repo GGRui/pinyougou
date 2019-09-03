@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>品牌管理</title>
-    <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
-    <link rel="stylesheet" href="../plugins/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../plugins/adminLTE/css/AdminLTE.css">
-    <link rel="stylesheet" href="../plugins/adminLTE/css/skins/_all-skins.min.css">
-    <link rel="stylesheet" href="../css/style.css">
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>品牌管理</title>
+	<meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
+	<link rel="stylesheet" href="../plugins/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../plugins/adminLTE/css/AdminLTE.css">
+	<link rel="stylesheet" href="../plugins/adminLTE/css/skins/_all-skins.min.css">
+	<link rel="stylesheet" href="../css/style.css">
 	<script src="../plugins/jQuery/jquery-2.2.3.min.js"></script>
-    <script src="../plugins/bootstrap/js/bootstrap.min.js"></script>
+	<script src="../plugins/bootstrap/js/bootstrap.min.js"></script>
 	<script src="../js/axios-0.18.0.js"></script>
 	<script src="../js/vuejs-2.5.16.js"></script>
 	<script src="../js/pagination.js"></script>
@@ -33,15 +33,16 @@
 			<div class="pull-left">
 				<div class="form-group form-inline">
 					<div class="btn-group">
-						<button type="button" class="btn btn-default" title="新建" data-toggle="modal" data-target="#editModal" ><i class="fa fa-file-o"></i> 新建</button>
-						<button type="button" class="btn btn-default" title="删除" ><i class="fa fa-trash-o"></i> 删除</button>
+						<button @click="entity={}" type="button" class="btn btn-default" title="新建" data-toggle="modal" data-target="#editModal" ><i class="fa fa-file-o"></i> 新建</button>
+						<button @click="deleteList()" type="button" class="btn btn-default" title="删除" ><i class="fa fa-trash-o"></i> 删除</button>
 						<button type="button" class="btn btn-default" title="刷新" onclick="window.location.reload();"><i class="fa fa-refresh"></i> 刷新</button>
 					</div>
 				</div>
 			</div>
 			<div class="box-tools pull-right">
 				<div class="has-feedback">
-
+					品牌名称：<input v-model="searchEntity.name"> 品牌首字母：<input v-model="searchEntity.firstChar">
+					<button @click="searchList(1)" type="button" class="btn btn-default" title="查询"><i class="fa fa-trash-o"></i> 查询</button>
 				</div>
 			</div>
 			<!--工具栏/-->
@@ -61,12 +62,12 @@
 				</thead>
 				<tbody>
 				<tr v-for="entity in entityList">
-					<td><input  type="checkbox" ></td>
+					<td><input v-model="ids" :value="entity.id" type="checkbox"></td>
 					<td>{{entity.id}}</td>
 					<td>{{entity.name}}</td>
 					<td>{{entity.firstChar}}</td>
 					<td class="text-center">
-						<button type="button" class="btn bg-olive btn-xs" data-toggle="modal" data-target="#editModal"  >修改</button>
+						<button @click="findOne(entity.id)" type="button" class="btn bg-olive btn-xs" data-toggle="modal" data-target="#editModal"  >修改</button>
 					</td>
 				</tr>
 				</tbody>
@@ -95,16 +96,16 @@
 					<table class="table table-bordered table-striped"  width="800px">
 						<tr>
 							<td>品牌名称</td>
-							<td><input  class="form-control" placeholder="品牌名称" >  </td>
+							<td><input v-model="entity.name" class="form-control" placeholder="品牌名称" >  </td>
 						</tr>
 						<tr>
 							<td>首字母</td>
-							<td><input  class="form-control" placeholder="首字母">  </td>
+							<td><input v-model="entity.firstChar" class="form-control" placeholder="首字母">  </td>
 						</tr>
 					</table>
 				</div>
 				<div class="modal-footer">
-					<button class="btn btn-success" data-dismiss="modal" aria-hidden="true">保存</button>
+					<button @click="save()" class="btn btn-success" data-dismiss="modal" aria-hidden="true">保存</button>
 					<button class="btn btn-default" data-dismiss="modal" aria-hidden="true">关闭</button>
 				</div>
 			</div>
@@ -112,36 +113,6 @@
 	</div>
 </div>
 
-<script type="text/javascript">
-	//创建vue实例
-	var app = new Vue({
-		el:"#app",
-		//数据
-		data:{
-		    entityList:[],
-			total:0,
-			pageSize:10,
-			pageNum:1
-		},
-		methods:{
-		  //分页查询
-			searchList:function (curPage) {
-				this.pageNum=curPage;
-				axios.get("../brand/findPage.do?pageNum="+this.pageNum+"&pageSize="+this.pageSize).then(function (response) {
-					app.entityList=response.data.list;
-					app.total=response.data.total;
-                });
-            }
-		},
-
-		// 传统方式写create:function(){}
-		created(){//需要打开设置 languages&frameworks--javaScript  把版本号改成ECMAScript 6
-			/*axios.get("../brand/findAll.do").then(function (response) {
-				app.entityList = response.data;
-            });*/
-			this.searchList(this.pageNum);
-		}
-	});
-</script>
+<script type="text/javascript" src="../js/controller/brandController.js"></script>
 </body>
 </html>
