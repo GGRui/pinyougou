@@ -44,12 +44,13 @@
                                         <button @click="entity={customAttributeItems:[]}" type="button" class="btn btn-default" title="新建" data-toggle="modal" data-target="#editModal" ><i class="fa fa-file-o"></i> 新建</button>
                                         <button @click="deleteList()" type="button" class="btn btn-default" title="删除"><i class="fa fa-trash-o"></i> 删除</button>
                                         <button type="button" class="btn btn-default" title="刷新" onclick="window.location.reload();"><i class="fa fa-refresh"></i> 刷新</button>
+                                        {{ids}}
                                     </div>
                                 </div>
                             </div>
                             <div class="box-tools pull-right">
                                 <div class="has-feedback">
-							                  分类模板名称：<input  >									
+							                  分类模板名称：<input v-model="searchEntity.name" >
 									<button @click="searchList(1)" class="btn btn-default">查询</button>
                                 </div>
                             </div>
@@ -60,7 +61,7 @@
 			                      <thead>
 			                          <tr>
 			                              <th class="" style="padding-right:0px">
-			                                  <input id="selall" type="checkbox" class="icheckbox_square-blue">
+			                                  <input id="selall" type="checkbox" v-model="checked" @change="changeAllChecked()" class="icheckbox_square-blue">
 			                              </th> 
 										  <th class="sorting_asc">模板ID</th>
 									      <th class="sorting">分类模板名称</th>

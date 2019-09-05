@@ -20,7 +20,9 @@ var app = new Vue({
         //品牌下拉列表数据
         brandList: [],
         //规格下拉列表数据
-        specificationList: []
+        specificationList: [],
+        //全选
+        checked:false
     },
     methods: {
         //获取格式化的品牌列表；格式为：[{id:'1',text:'联想'},{id:'2',text:'华为'}]

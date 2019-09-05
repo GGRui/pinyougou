@@ -52,7 +52,7 @@
 				<thead>
 				<tr>
 					<th class="" style="padding-right:0px">
-						<input id="selall" type="checkbox" class="icheckbox_square-blue">
+						<input id="selall" type="checkbox" class="icheckbox_square-blue" v-model="checked" @change="changeAllChecked()">
 					</th>
 					<th class="sorting_asc">品牌ID</th>
 					<th class="sorting">品牌名称</th>
@@ -62,7 +62,7 @@
 				</thead>
 				<tbody>
 				<tr v-for="entity in entityList">
-					<td><input v-model="ids" :value="entity.id" type="checkbox"></td>
+					<td><input v-model="ids" :value="entity.id" type="checkbox" ></td>
 					<td>{{entity.id}}</td>
 					<td>{{entity.name}}</td>
 					<td>{{entity.firstChar}}</td>

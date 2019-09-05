@@ -5,6 +5,7 @@ import com.pinyougou.pojo.TbBrand;
 import com.pinyougou.service.BaseService;
 
 import java.util.List;
+import java.util.Map;
 
 public interface BrandService extends BaseService<TbBrand> {
     /**
@@ -30,4 +31,10 @@ public interface BrandService extends BaseService<TbBrand> {
      * @return 分页信息对象
      */
     PageInfo<TbBrand> search(Integer pageNum, Integer pageSize, TbBrand brand);
+
+    /**
+     * 查询所有品牌列表；格式为：[{id:'1',text:'联想'},{id:'2',text:'华为'}]
+     * @return 品牌列表；格式为：[{id:'1',text:'联想'},{id:'2',text:'华为'}]
+     */
+    List<Map<String,String>> selectOptionList();
 }

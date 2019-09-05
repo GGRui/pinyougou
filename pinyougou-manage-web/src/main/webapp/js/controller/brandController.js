@@ -16,9 +16,25 @@ var app = new Vue({
         //选中的ids
         ids:[],
         //查询条件对象
-        searchEntity:{}
+        searchEntity:{},
+        //复选框默认值
+        checked:false
     },
     methods:{
+        //复选框全选和取消
+        changeAllChecked:function () {
+            var iid=[];
+            for (var i = 0; i < app.entityList.length; i++) {
+                var obj = app.entityList[i];
+                console.log(obj.id);
+                iid.push(obj.id)
+            }
+            if (this.checked){
+                this.ids=iid
+            }else {
+                this.ids=[];
+            }
+        },
         //批量删除
         deleteList:function () {
             if (this.ids.length == 0){
@@ -59,17 +75,29 @@ var app = new Vue({
         //分页查询
         searchList:function (curPage) {
             this.pageNum=curPage;
+            this.ids=[];
             /*axios.get("../brand/findPage.do?pageNum="+this.pageNum+"&pageSize="+this.pageSize).then(function (response) {
                 app.entityList=response.data.list;
                 app.total=response.data.total;
             });*/
 
             axios.post("../brand/search.do?pageNum="+this.pageNum+"&pageSize="+this.pageSize,this.searchEntity).then(function (response) {
+
                 //记录列表
                 app.entityList=response.data.list;
                 //符合本次查询的总记录数
                 app.total=response.data.total;
             });
+        }
+    },
+    watch: {
+        ids: function() {
+
+            if (this.ids.length == this.entityList.length) {
+                this.checked = true
+            } else {
+                this.checked = false
+            }
         }
     },
     // 传统方式写create:function(){}
