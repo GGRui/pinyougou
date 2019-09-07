@@ -61,7 +61,7 @@
 			                      <thead>
 			                          <tr>
 			                              <th class="" style="padding-right:0px">
-			                                  <input id="selall" type="checkbox" v-model="checked" @change="changeAllChecked()" class="icheckbox_square-blue">
+			                                  <input id="selall" @change="changeAllChecked" v-model="checked" type="checkbox" class="icheckbox_square-blue">
 			                              </th> 
 										  <th class="sorting_asc">模板ID</th>
 									      <th class="sorting">分类模板名称</th>
@@ -76,9 +76,9 @@
 			                              <td><input :value="entity.id" v-model="ids" type="checkbox"></td>
                                           <td>{{entity.id}}</td>
                                           <td>{{entity.name}}</td>
-                                          <td>{{entity.brandIds}}</td>
-                                          <td>{{entity.specIds}}</td>
-                                          <td>{{entity.customAttributeItems}}</td>
+                                          <td>{{jsonToString(entity.brandIds,'text')}}</td>
+                                          <td>{{jsonToString(entity.specIds,'text')}}</td>
+                                          <td>{{jsonToString(entity.customAttributeItems,'text')}}</td>
                                           <td class="text-center">
                                               <button type="button" @click="findOne(entity.id)" class="btn bg-olive btn-xs" data-toggle="modal" data-target="#editModal" >修改</button>
                                           </td>

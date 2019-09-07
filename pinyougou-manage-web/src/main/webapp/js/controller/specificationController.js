@@ -15,8 +15,25 @@ var app = new Vue({
         ids: [],
         //定一个空的搜索条件对象
         searchEntity:{}
+        //复选框
+        //checked:false
     },
     methods: {
+        /*//复选框全选和取消
+        changeAllChecked:function () {
+            var iid=[];
+            for (var i = 0; i < app.entityList.length; i++) {
+                var obj = app.entityList[i];
+                console.log(obj.id);
+                iid.push(obj.id)
+            }
+            if (this.checked){
+                this.ids=iid
+            }else {
+                this.ids=[];
+            }
+        },*/
+
         //删除规格选项
         deleteTableRow: function(index){
             //删除的元素索引号，要删除的元素个数
@@ -33,6 +50,7 @@ var app = new Vue({
                 app.entityList = response.data.list;
                 app.total = response.data.total;
             });
+            this.ids=[];
         },
         //保存数据
         save: function () {
@@ -74,7 +92,16 @@ var app = new Vue({
                 });
             }
         }
-    },
+    }/*,
+    watch: {
+        ids: function() {
+            if (this.ids.length == this.entityList.length && this.entityList.length > 0) {
+                this.checked = true
+            } else {
+                this.checked = false
+            }
+        }
+    }*/,
     created: function () {
         this.searchList(this.pageNum);
     }

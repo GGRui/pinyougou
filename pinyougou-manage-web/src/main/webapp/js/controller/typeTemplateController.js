@@ -25,6 +25,35 @@ var app = new Vue({
         checked:false
     },
     methods: {
+        //复选框全选和取消
+        changeAllChecked:function () {
+            var iid=[];
+            for (var i = 0; i < app.entityList.length; i++) {
+                var obj = app.entityList[i];
+                console.log(obj.id);
+                iid.push(obj.id)
+            }
+            if (this.checked){
+                this.ids=iid
+            }else {
+                this.ids=[];
+            }
+        },
+        //优化
+        jsonToString:function (jsonArrayStr,key) {
+            var str="";
+            var jsonArray = JSON.parse(jsonArrayStr);
+            for (var i = 0; i < jsonArray.length; i++) {
+                console.log(jsonArray[i]);
+                const obj = jsonArray[i];
+                if (str.length > 0){
+                    str += "," + obj[key];
+                }else{
+                    str = obj[key];
+                }
+            }
+            return str;
+        },
         //获取格式化的品牌列表；格式为：[{id:'1',text:'联想'},{id:'2',text:'华为'}]
         findBrandList: function(){
             axios.get("../brand/selectOptionList.do").then(function (response) {
@@ -53,6 +82,7 @@ var app = new Vue({
                 app.entityList = response.data.list;
                 app.total = response.data.total;
             });
+            this.ids=[];
         },
         //保存数据
         save: function () {
@@ -96,6 +126,15 @@ var app = new Vue({
                         alert(response.data.message);
                     }
                 });
+            }
+        }
+    },
+    watch: {
+        ids: function() {
+            if (this.ids.length == this.entityList.length && this.entityList.length > 0) {
+                this.checked = true
+            } else {
+                this.checked = false
             }
         }
     },

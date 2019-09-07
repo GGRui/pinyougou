@@ -75,7 +75,6 @@ var app = new Vue({
         //分页查询
         searchList:function (curPage) {
             this.pageNum=curPage;
-            this.ids=[];
             /*axios.get("../brand/findPage.do?pageNum="+this.pageNum+"&pageSize="+this.pageSize).then(function (response) {
                 app.entityList=response.data.list;
                 app.total=response.data.total;
@@ -88,12 +87,13 @@ var app = new Vue({
                 //符合本次查询的总记录数
                 app.total=response.data.total;
             });
+            this.ids=[];
         }
     },
     watch: {
         ids: function() {
 
-            if (this.ids.length == this.entityList.length) {
+            if (this.ids.length == this.entityList.length && this.entityList.length > 0) {
                 this.checked = true
             } else {
                 this.checked = false
