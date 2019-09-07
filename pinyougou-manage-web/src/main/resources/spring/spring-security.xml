@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/security
+http://www.springframework.org/schema/security/spring-security.xsd">
+
+    <!--哪些资源是不需要拦截的-->
+    <http pattern="/css/**" security="none"></http>
+    <http pattern="/img/**" security="none"></http>
+    <http pattern="/js/**" security="none"></http>
+    <http pattern="/plugins/**" security="none"></http>
+    <http pattern="/login.html" security="none"></http>
+
+    <!--配置哪些资源需要什么角色权限才能访问
+    use-expressions="false" 表示不使用表达式hasRole；直接写角色名称；
+    默认是true要写成hasRole(ROLE_USER)
+    如果是false则不需要写hasRole；直接写角色的名称
+    -->
+    <http use-expressions="false">
+        <intercept-url pattern="/**" access="ROLE_USER"/>
+
+        <!--设置登录表单项-->
+        <form-login always-use-default-target="true" default-target-url="/admin/index.html"
+                    login-page="/login.html" authentication-failure-forward-url="/login.html"/>
+        <!--如果使用了iframe 等框架，希望跳转也是在框架内跳转的话-->
+        <headers>
+            <frame-options policy="SAMEORIGIN"/>
+        </headers>
+
+        <!--禁止跨站请求访问-->
+        <csrf disabled="true"/>
+
+        <!--退出-->
+        <logout/>
+    </http>
+
+    <!--加密方式-->
+    <beans:bean id="passwordEncoder" class="org.springframework.security.crypto.password.NoOpPasswordEncoder"/>
+
+    <!--配置认证管理器-->
+    <authentication-manager>
+        <authentication-provider>
+            <password-encoder ref="passwordEncoder"/>
+            <user-service>
+                <user name="admin" authorities="ROLE_USER" password="123456"/>
+                <user name="itcast" authorities="ROLE_USER" password="123456"/>
+            </user-service>
+        </authentication-provider>
+    </authentication-manager>
+</beans:beans>
