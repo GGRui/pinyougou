@@ -77,7 +77,7 @@
                         {{entity.typeId}}
                     </td>
                     <td class="text-center">
-                        <button v-show="grade<3" @click="selectList(grade+1,entity)" type="button" class="btn bg-olive btn-xs" >查询下级</button>
+                        <button v-show="grade!=3" @click="selectList(grade+1,entity)" type="button" class="btn bg-olive btn-xs" >查询下级</button>
                         <button @click="findOne(entity.id)" type="button" class="btn bg-olive btn-xs" data-toggle="modal" data-target="#editModal" >修改</button>
                     </td>
                 </tr>

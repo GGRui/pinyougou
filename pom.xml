@@ -245,11 +245,11 @@
             </dependency>
 
             <!--fastDFS客户端工具类包-->
-            <!--<dependency>-->
-                <!--<groupId>fastdfs_client</groupId>-->
-                <!--<artifactId>fastdfs_client</artifactId>-->
-                <!--<version>${fastdfs.client.version}</version>-->
-            <!--</dependency>-->
+            <dependency>
+                <groupId>fastdfs_client</groupId>
+                <artifactId>fastdfs_client</artifactId>
+                <version>${fastdfs.client.version}</version>
+            </dependency>
 
             <!--freemarker-->
             <dependency>

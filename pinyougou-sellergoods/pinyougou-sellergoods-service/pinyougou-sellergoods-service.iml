@@ -102,5 +102,6 @@
     <orderEntry type="library" name="Maven: io.netty:netty-all:4.1.16.Final" level="project" />
     <orderEntry type="library" name="Maven: com.alibaba:fastjson:1.2.44" level="project" />
     <orderEntry type="module" module-name="pinyougou-common" />
+    <orderEntry type="module" module-name="fastdfs_client" />
   </component>
 </module>

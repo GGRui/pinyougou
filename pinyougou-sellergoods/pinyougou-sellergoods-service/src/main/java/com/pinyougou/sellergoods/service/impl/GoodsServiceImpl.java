@@ -3,10 +3,12 @@ package com.pinyougou.sellergoods.service.impl;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.pinyougou.mapper.GoodsDescMapper;
 import com.pinyougou.mapper.GoodsMapper;
 import com.pinyougou.pojo.TbGoods;
 import com.pinyougou.sellergoods.service.GoodsService;
 import com.pinyougou.service.impl.BaseServiceImpl;
+import com.pinyougou.vo.Goods;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import tk.mybatis.mapper.entity.Example;
@@ -18,6 +20,8 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
 
     @Autowired
     private GoodsMapper goodsMapper;
+    @Autowired
+    private GoodsDescMapper goodsDescMapper;
 
     @Override
     public PageInfo<TbGoods> search(Integer pageNum, Integer pageSize, TbGoods goods) {
@@ -36,6 +40,15 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
 
         List<TbGoods> list = goodsMapper.selectByExample(example);
         return new PageInfo<>(list);
+    }
+
+    @Override
+    public void addGoods(Goods goods) {
+        //1.保存商品基本信息
+        add(goods.getGoods());
+        //2.保存商品信息描述
+        goods.getGoodsDesc().setGoodsId(goods.getGoods().getId());
+        goodsDescMapper.insertSelective(goods.getGoodsDesc());
     }
 
 }
