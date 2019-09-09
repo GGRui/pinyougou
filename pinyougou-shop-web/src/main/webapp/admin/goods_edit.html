@@ -188,8 +188,8 @@
                                 <p>
 
                                 <div v-show="entity.goods.isEnableSpec==1">
-
-                                    <div class="row data-type">
+                                {{entity.goodsDesc.specificationItems}}
+                                <div class="row data-type">
 
                                         <div v-for="spec in specList">
                                             <div class="col-md-2 title">{{spec.text}}</div>
