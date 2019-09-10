@@ -16,6 +16,16 @@ public class ItemCatController {
     @Reference
     private ItemCatService itemCatService;
 
+    @GetMapping("/findAll")
+    public List<TbItemCat> findAll(){
+        return itemCatService.findAll();
+    }
+
+    /**
+     * 根据父id查询
+     * @param parentId
+     * @return
+     */
     @GetMapping("/findByParentId")
     public List<TbItemCat> findByParentId(Long parentId){
         TbItemCat tbItemCat = new TbItemCat();

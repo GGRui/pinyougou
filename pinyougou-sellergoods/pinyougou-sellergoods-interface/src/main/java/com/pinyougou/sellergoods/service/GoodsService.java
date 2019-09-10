@@ -23,4 +23,33 @@ public interface GoodsService extends BaseService<TbGoods> {
      * @return 操作结果
      */
     void addGoods(Goods goods);
+
+    /**
+     * 根据主键查询
+     * @param id 主键
+     * @return 实体
+     */
+    Goods findGoodsById(Long id);
+
+    /**
+     * 修改商品
+     * @param goods 实体
+     * @return 操作结果
+     */
+    void updateGoods(Goods goods);
+
+    /**
+     * 根据商品spu id数组更新商品spu 的审核状态
+     * @param status 商品状态spu
+     * @param ids 商品spu id数组
+     * @return 操作结果
+     */
+    void updateStatus(Long[] ids, String status);
+
+    /**
+     * 根据主键数组批量删除
+     * @param ids 主键数组
+     * @return 实体
+     */
+    void deleteByGoodsIds(Long[] ids);
 }
