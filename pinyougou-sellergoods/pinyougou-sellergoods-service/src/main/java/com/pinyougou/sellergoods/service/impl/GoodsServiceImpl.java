@@ -157,6 +157,22 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
         goodsMapper.updateByExampleSelective(goods,goodsExample);
     }
 
+    @Override
+    public void updateMarketable(String market, Long[] ids) {
+
+        TbItem tbItem = new TbItem();
+        //判断商品是否已经审核通过
+        if ("1".equals(tbItem.getStatus())) {
+            TbGoods goods = new TbGoods();
+            goods.setIsMarketable(market);
+
+            //更新条件
+            Example example = new Example(TbGoods.class);
+            example.createCriteria().andIn("id",Arrays.asList(ids));
+            goodsMapper.updateByExampleSelective(goods,example);
+        }
+    }
+
     /**
      * 保存商品sku
      * @param goods 商品vo

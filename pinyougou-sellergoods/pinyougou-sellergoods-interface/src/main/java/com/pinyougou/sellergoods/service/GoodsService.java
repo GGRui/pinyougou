@@ -52,4 +52,12 @@ public interface GoodsService extends BaseService<TbGoods> {
      * @return 实体
      */
     void deleteByGoodsIds(Long[] ids);
+
+    /**
+     * 商品上架
+     * @param marketable 商品上架状态
+     * @param ids 商品spu id数组
+     * @return 操作结果
+     */
+    void updateMarketable(String market, Long[] ids);
 }

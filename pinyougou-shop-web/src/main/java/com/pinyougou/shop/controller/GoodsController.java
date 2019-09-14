@@ -96,11 +96,22 @@ public class GoodsController {
         return Result.fail("更新商品状态成功!");
     }
 
-    /*@GetMapping("/updateMarketable")
-    public Result updateMarketable(String marketable,Long[] ids){
-        goodsService.updateMarketable(marketable,ids);
-        return Result.ok("更新商品状态成功!");
-    }*/
+    /**
+     * 商品上架
+     * @param market 商品上架状态
+     * @param ids 商品spu id数组
+     * @return 操作结果
+     */
+    @GetMapping("/updateMarketable")
+    public Result updateMarketable(String market,Long[] ids){
+        try {
+            goodsService.updateMarketable(market,ids);
+            return Result.ok("更新商品状态成功!");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Result.fail("更新商品状态失败!");
+    }
 
     /**
      * 根据主键数组批量删除

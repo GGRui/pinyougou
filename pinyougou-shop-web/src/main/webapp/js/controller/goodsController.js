@@ -95,6 +95,24 @@ var goodsControllerMixin = {
         }
     },
     methods: {
+        //商品上架
+        updateMarketable:function (market) {
+            if(this.ids.length < 1) {
+                alert("请先选择商品");
+                return;
+            }
+            if(confirm("确定要把选中的商品上架吗？")){
+                axios.get("../goods/updateMarketable.do?market="+market+"&ids="+this.ids).then(function (response) {
+                    if(response.data.success) {
+                        //刷新列表并清空选中的那些商品
+                        app.searchList(app.pageNum);
+                        app.ids = [];
+                    } else {
+                        alert(response.data.message);
+                    }
+                });
+            }
+        },
         //修改商品的状态
         updateStatus: function (status) {
             if(this.ids.length < 1) {

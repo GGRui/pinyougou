@@ -6,6 +6,7 @@
 http://www.springframework.org/schema/beans/spring-beans.xsd
 http://code.alibabatech.com/schema/dubbo
 http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
     <dubbo:protocol name="dubbo" port="20880"/>
     <dubbo:application name="pinyougou-sellergoods-service">
         <!--  不开启 qos ； qos 可通过指令动态调动提供的服务  -->
