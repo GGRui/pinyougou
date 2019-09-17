@@ -1,5 +1,9 @@
 package com.pinyougou.pojo;
 
+import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
+
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -10,16 +14,61 @@ import java.util.Date;
 import java.util.Map;
 
 @Table(name = "tb_item")
+/**
+ * 索引名：pyg-item
+ * 索引类型：在es 6.*+版本，类型将慢慢过时，推荐使用_doc
+ * 分2片，开发就不需要备份分片了
+ */
+@Document(indexName = "pyg-item", type = "_doc", shards = 2, replicas = 0)
 public class TbItem implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @org.springframework.data.annotation.Id
+    @Field(store = true, type = FieldType.Long)
     private Long id;
 
+    /**
+     * 存储
+     * 创建索引的时候使用最细粒度分词
+     * 搜索使用智能最少分词
+     * text类型 会进行分词
+     * copyTo 复制域，将内容复制到keywords（任意起名字）域中
+     */
+    @Field(store = true, analyzer = "ik_max_word", searchAnalyzer = "ik_smart",
+            type = FieldType.Text, copyTo = "keywords")
     private String title;
 
-    private String sellPoint;
+    @Field(store = true, type = FieldType.Double)
+    private Double price;
 
-    private BigDecimal price;
+    /**
+     * keyword类型不分词（相当于string，string在5.x+过时了）
+     */
+    @Field(index = false, store = true, type = FieldType.Keyword)
+    private String image;
+
+    @Field(store = true, type = FieldType.Long)
+    private Long goodsId;
+
+    @Field(type = FieldType.Date)
+    private Date updateTime;
+
+    @Field(store = true, type = FieldType.Keyword, copyTo = "keywords")
+    private String category;
+
+    @Field(store = true, type = FieldType.Keyword, copyTo = "keywords")
+    private String brand;
+
+    @Field(store = true, type = FieldType.Keyword, copyTo = "keywords")
+    private String seller;
+
+    //嵌套域
+    @Field(type = FieldType.Nested)
+    private Map<String, String> specMap;
+
+    private String status;
+
+    private String sellPoint;
 
     private Integer stockCount;
 
@@ -27,15 +76,9 @@ public class TbItem implements Serializable {
 
     private String barcode;
 
-    private String image;
-
     private Long categoryid;
 
-    private String status;
-
     private Date createTime;
-
-    private Date updateTime;
 
     private String itemSn;
 
@@ -45,21 +88,11 @@ public class TbItem implements Serializable {
 
     private String isDefault;
 
-    private Long goodsId;
-
     private String sellerId;
 
     private String cartThumbnail;
 
-    private String category;
-
-    private String brand;
-
     private String spec;
-
-    private String seller;
-
-    private Map<String, String> specMap;
 
     private static final long serialVersionUID = 1L;
 
@@ -87,11 +120,11 @@ public class TbItem implements Serializable {
         this.sellPoint = sellPoint;
     }
 
-    public BigDecimal getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(BigDecimal price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 
@@ -253,5 +286,22 @@ public class TbItem implements Serializable {
 
     public void setSpecMap(Map<String, String> specMap) {
         this.specMap = specMap;
+    }
+
+    @Override
+    public String toString() {
+        return "TbItem{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", price=" + price +
+                ", image='" + image + '\'' +
+                ", goodsId=" + goodsId +
+                ", updateTime=" + updateTime +
+                ", category='" + category + '\'' +
+                ", brand='" + brand + '\'' +
+                ", seller='" + seller + '\'' +
+                ", specMap=" + specMap +
+                ", status='" + status + '\'' +
+                '}';
     }
 }

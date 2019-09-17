@@ -173,6 +173,44 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
         }
     }
 
+    @Override
+    public List<TbItem> findItemListByGoodsIdsAndItemStatus(Long[] goodsIds, String itemStatus) {
+        /**
+         * select * from tb_item where goods_id in (?,?,...) and status='1'
+         */
+        Example example = new Example(TbItem.class);
+        example.createCriteria()
+                .andEqualTo("status",itemStatus)
+                .andIn("goodsId",Arrays.asList(goodsIds));
+
+        return itemMapper.selectByExample(example);
+    }
+
+    @Override
+    public Goods findGoodsByIdAndStatus(Long goodsId, String itemStatus) {
+        Goods goods = new Goods();
+        goods.setGoods(findOne(goodsId));
+        //描述
+        goods.setGoodsDesc(goodsDescMapper.selectByPrimaryKey(goodsId));
+
+        //sku 列表
+        //sql --> select * from tb_item where goods_id=? and status=? order by is_default desc
+
+        Example example = new Example(TbItem.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("goodsId",goodsId);
+
+        if (StringUtils.isNotBlank(itemStatus)){
+            criteria.andEqualTo("status",itemStatus);
+        }
+
+        example.orderBy("isDefault").desc();
+        List<TbItem> itemList = itemMapper.selectByExample(example);
+        goods.setItemList(itemList);
+
+        return goods;
+    }
+
     /**
      * 保存商品sku
      * @param goods 商品vo

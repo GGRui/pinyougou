@@ -3,11 +3,15 @@ package com.pinyougou.manage.controller;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.github.pagehelper.PageInfo;
 import com.pinyougou.pojo.TbGoods;
+import com.pinyougou.pojo.TbItem;
 import com.pinyougou.sellergoods.service.GoodsService;
+import com.pinyougou.service.ItemSearchService;
 import com.pinyougou.vo.Goods;
 import com.pinyougou.vo.Result;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequestMapping("/goods")
 @RestController
@@ -15,6 +19,9 @@ public class GoodsController {
 
     @Reference
     private GoodsService goodsService;
+
+    @Reference
+    private ItemSearchService itemSearchService;
 
 
 
@@ -83,6 +90,14 @@ public class GoodsController {
     public Result updateStatus(String status,Long[] ids){
         try {
             goodsService.updateStatus(ids,status);
+            //同步搜索系统数据
+            if ("2".equals(status)){
+                //审核通过：根据sku id数组和已启用状态（1）查询商品sku列表
+                List<TbItem> itemList = goodsService.findItemListByGoodsIdsAndItemStatus(ids,"1");
+
+                //更新系统中的数据
+                itemSearchService.importItemList(itemList);
+            }
             return Result.ok("更新商品状态成功!");
         } catch (Exception e) {
             e.printStackTrace();
@@ -100,6 +115,9 @@ public class GoodsController {
         try {
             //goodsService.deleteByIds(ids);
             goodsService.deleteByGoodsIds(ids);
+
+            itemSearchService.deleteByGoodsIds(ids);
+
             return Result.ok("删除成功");
         } catch (Exception e) {
             e.printStackTrace();
