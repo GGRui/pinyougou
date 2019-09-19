@@ -96,7 +96,7 @@ var goodsControllerMixin = {
     },
     methods: {
         //商品上架
-        updateMarketable:function (market) {
+        /*updateMarketable:function (market) {
             if(this.ids.length < 1) {
                 alert("请先选择商品");
                 return;
@@ -112,7 +112,7 @@ var goodsControllerMixin = {
                     }
                 });
             }
-        },
+        },*/
         //修改商品的状态
         updateStatus: function (status) {
             if(this.ids.length < 1) {

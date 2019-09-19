@@ -79,20 +79,7 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
 
     @Override
     public Goods findGoodsById(Long id) {
-        Goods goods = new Goods();
-        //基本
-        goods.setGoods(findOne(id));
-        //描述
-        goods.setGoodsDesc(goodsDescMapper.selectByPrimaryKey(id));
-
-        //sku  列表
-        // sql --> select * from tb_item where goods_id=?
-        TbItem param = new TbItem();
-        param.setGoodsId(id);
-        List<TbItem> itemList = itemMapper.select(param);
-        goods.setItemList(itemList);
-
-        return goods;
+        return findGoodsByIdAndStatus(id, null);
     }
 
     @Override
@@ -100,9 +87,8 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
         //更新商品的基本信息
         //修改过则重新设置为未审核
         goods.getGoods().setAuditStatus("0");
-        goodsMapper.updateByPrimaryKeySelective(goods.getGoods());
-
-        //更新商品的描述信息
+        update(goods.getGoods());
+        //2、更新商品描述信息
         goodsDescMapper.updateByPrimaryKeySelective(goods.getGoodsDesc());
 
         //删除原有的sku列表
@@ -140,7 +126,7 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
 
         //更新sku的条件---》where
         Example itemExample = new Example(TbItem.class);
-        itemExample.createCriteria().andIn("id",Arrays.asList(ids));
+        itemExample.createCriteria().andIn("goodsId",Arrays.asList(ids));
 
         itemMapper.updateByExampleSelective(tbItem,itemExample);
     }
@@ -155,22 +141,6 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
         goodsExample.createCriteria().andIn("id" ,Arrays.asList(ids));
 
         goodsMapper.updateByExampleSelective(goods,goodsExample);
-    }
-
-    @Override
-    public void updateMarketable(String market, Long[] ids) {
-
-        TbItem tbItem = new TbItem();
-        //判断商品是否已经审核通过
-        if ("1".equals(tbItem.getStatus())) {
-            TbGoods goods = new TbGoods();
-            goods.setIsMarketable(market);
-
-            //更新条件
-            Example example = new Example(TbGoods.class);
-            example.createCriteria().andIn("id",Arrays.asList(ids));
-            goodsMapper.updateByExampleSelective(goods,example);
-        }
     }
 
     @Override

@@ -189,7 +189,7 @@
 						</ul>
 					</div>
 				</div>
-				<div v-if="searchMap.spec['网络']==null" class="type-wrap">
+                <div v-if="searchMap.spec['网络']==null" class="type-wrap">
                     <div class="fl key">网络</div>
                     <div class="fl value">
                         <ul class="type-list">
@@ -215,7 +215,7 @@
                     </div>
                     <div class="fl ext"></div>
                 </div>
-				<div v-if="searchMap.spec['机身内存']==null" class="type-wrap">
+                <div v-if="searchMap.spec['机身内存']==null" class="type-wrap">
                     <div class="fl key">机身内存</div>
                     <div class="fl value">
                         <ul class="type-list">
@@ -291,29 +291,27 @@
 			<!--details-->
 			<div class="details">
 				<div class="sui-navbar">
-					<div class="sui-navbar">
-						<div class="navbar-inner filter">
-							<ul class="sui-nav">
-								<li class="active">
-									<a @click.prevent="sortSearch('','')" href="#">综合</a>
-								</li>
-								<li>
-									<a href="#">销量</a>
-								</li>
-								<li>
-									<a @click.prevent="sortSearch('updateTime','DESC')" href="#">新品</a>
-								</li>
-								<li>
-									<a href="#">评价</a>
-								</li>
-								<li>
-									<a @click.prevent="sortSearch('price','ASC')" href="#">价格↑</a>
-								</li>
-								<li>
-									<a @click.prevent="sortSearch('price','DESC')" href="#">价格↓</a>
-								</li>
-							</ul>
-						</div>
+					<div class="navbar-inner filter">
+						<ul class="sui-nav">
+							<li class="active">
+								<a @click.prevent="sortSearch('','')" href="#">综合</a>
+							</li>
+							<li>
+								<a href="#">销量</a>
+							</li>
+							<li>
+								<a @click.prevent="sortSearch('updateTime','DESC')" href="#">新品</a>
+							</li>
+							<li>
+								<a href="#">评价</a>
+							</li>
+							<li>
+								<a @click.prevent="sortSearch('price','ASC')" href="#">价格↑</a>
+							</li>
+							<li>
+								<a @click.prevent="sortSearch('price','DESC')" href="#">价格↓</a>
+							</li>
+						</ul>
 					</div>
 				</div>
 				<div class="goods-list">
@@ -330,7 +328,15 @@
 										</strong>
 								</div>
 								<div class="attr" v-html="item.title" style="height: auto">
-									<em>{{item.title}}</em>
+								</div>
+								<div class="attr" style="height: auto">
+									<em>品牌：{{item.brand}}</em>
+								</div>
+								<div class="attr" style="height: auto">
+									<em>商家：{{item.seller}}</em>
+								</div>
+								<div class="attr" style="height: auto">
+									<em>分类：{{item.category}}</em>
 								</div>
 								<div class="cu">
 									<em><span>促</span>满一件可参加超值换购</em>
@@ -353,7 +359,7 @@
 							<li :class="['prev',searchMap.pageNo<=1?'disabled':'']">
 								<a @click.prevent="queryByPageNo(searchMap.pageNo-1)" href="#">«上一页</a>
 							</li>
-							<li v-if="frontDot" class="dotted"><span>...</span></li>
+                            <li v-if="frontDot" class="dotted"><span>...</span></li>
 
 							<li v-for="pn in pageNoList" :class="pn==searchMap.pageNo?'active':''">
 								<a @click.prevent="queryByPageNo(pn)" href="#">{{pn}}</a>

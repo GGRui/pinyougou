@@ -54,13 +54,6 @@ public interface GoodsService extends BaseService<TbGoods> {
      */
     void deleteByGoodsIds(Long[] ids);
 
-    /**
-     * 商品上架
-     * @param market 商品上架状态
-     * @param ids 商品spu id数组
-     * @return 操作结果
-     */
-    void updateMarketable(String market, Long[] ids);
 
     /**
      * 根据sku id数组和已启用状态（1）查询商品sku列表

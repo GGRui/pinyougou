@@ -19,7 +19,7 @@ import java.util.List;
 @RestController
 public class GoodsController {
 
-    @Reference
+    @Reference(retries = 0, timeout = 10000)
     private GoodsService goodsService;
 
 
@@ -93,7 +93,7 @@ public class GoodsController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return Result.fail("更新商品状态成功!");
+        return Result.fail("更新商品状态失败!");
     }
 
     /**
@@ -102,16 +102,16 @@ public class GoodsController {
      * @param ids 商品spu id数组
      * @return 操作结果
      */
-    @GetMapping("/updateMarketable")
+    /*@GetMapping("/updateMarketable")
     public Result updateMarketable(String market,Long[] ids){
         try {
             goodsService.updateMarketable(market,ids);
-            return Result.ok("更新商品状态成功!");
+            return Result.ok("商品上架成功!");
         } catch (Exception e) {
             e.printStackTrace();
         }
         return Result.fail("更新商品状态失败!");
-    }
+    }*/
 
     /**
      * 根据主键数组批量删除

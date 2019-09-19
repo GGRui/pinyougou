@@ -1,27 +1,45 @@
 package com.pinyougou.manage.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
 import com.pinyougou.pojo.TbGoods;
 import com.pinyougou.pojo.TbItem;
 import com.pinyougou.sellergoods.service.GoodsService;
-import com.pinyougou.service.ItemSearchService;
 import com.pinyougou.vo.Goods;
 import com.pinyougou.vo.Result;
+import org.apache.activemq.command.ActiveMQQueue;
+import org.apache.activemq.command.ActiveMQTopic;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.core.MessageCreator;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.jms.*;
 import java.util.List;
 
 @RequestMapping("/goods")
 @RestController
 public class GoodsController {
 
-    @Reference
+    @Reference(retries = 0, timeout = 10000)
     private GoodsService goodsService;
 
-    @Reference
-    private ItemSearchService itemSearchService;
+    @Autowired
+    private JmsTemplate jmsTemplate;
+
+    @Autowired
+    private ActiveMQQueue itemEsQueue;
+
+    @Autowired
+    private ActiveMQQueue itemEsDeleteQueue;
+
+    @Autowired
+    private ActiveMQTopic itemTopic;
+
+    @Autowired
+    private ActiveMQTopic itemDeleteTopic;
 
 
 
@@ -96,7 +114,18 @@ public class GoodsController {
                 List<TbItem> itemList = goodsService.findItemListByGoodsIdsAndItemStatus(ids,"1");
 
                 //更新系统中的数据
-                itemSearchService.importItemList(itemList);
+                //itemSearchService.importItemList(itemList);
+
+                jmsTemplate.send(itemEsQueue, new MessageCreator() {
+                    @Override
+                    public Message createMessage(Session session) throws JMSException {
+                        TextMessage textMessage = session.createTextMessage();
+                        textMessage.setText(JSON.toJSONString(itemList));
+                        return textMessage;
+                    }
+                });
+                //发送商品被审核通过的主题消息
+                sendMQMessage(itemTopic,ids);
             }
             return Result.ok("更新商品状态成功!");
         } catch (Exception e) {
@@ -116,13 +145,28 @@ public class GoodsController {
             //goodsService.deleteByIds(ids);
             goodsService.deleteByGoodsIds(ids);
 
-            itemSearchService.deleteByGoodsIds(ids);
+            //同步删除搜索系统中数据
+            sendMQMessage(itemEsDeleteQueue,ids);
+            //发送商品被删除的主题消息
+            sendMQMessage(itemDeleteTopic,ids);
+            //itemSearchService.deleteByGoodsIds(ids);
 
             return Result.ok("删除成功");
         } catch (Exception e) {
             e.printStackTrace();
         }
         return Result.fail("删除失败");
+    }
+
+    private void sendMQMessage(Destination destination, Long[] ids) {
+        jmsTemplate.send(destination, new MessageCreator() {
+            @Override
+            public Message createMessage(Session session) throws JMSException {
+                ObjectMessage objectMessage = session.createObjectMessage();
+                objectMessage.setObject(ids);
+                return objectMessage;
+            }
+        });
     }
 
     /**
@@ -134,8 +178,8 @@ public class GoodsController {
      */
     @PostMapping("/search")
     public PageInfo<TbGoods> search(@RequestParam(value = "pageNum", required = false, defaultValue = "1") Integer pageNum,
-                             @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize,
-                           @RequestBody TbGoods goods) {
+                                    @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize,
+                                    @RequestBody TbGoods goods) {
         return goodsService.search(pageNum, pageSize, goods);
     }
 
