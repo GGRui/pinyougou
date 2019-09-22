@@ -66,8 +66,8 @@ public class UserServiceImpl extends BaseServiceImpl<TbUser> implements UserServ
     @Override
     public void sendSmsCode(String phone) {
         //生成随机的6位数值的字符串，
-        String code = (int)((Math.random())*1000000) + "";
-        System.out.println("-----验证码------：" + code);
+        String code = (long)((Math.random()*9+1)*100000) + "";
+        System.out.println("---------------验证码---------------：" + code);
         //将用户的手机号和验证码存入redis中并设置5分钟过期
         redisTemplate.boundValueOps(phone).set(code);
         redisTemplate.boundValueOps(phone).expire(5, TimeUnit.MINUTES);
